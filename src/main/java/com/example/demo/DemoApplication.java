@@ -20,5 +20,4 @@ public class DemoApplication {
 	public List<String> hello(){
 		return new ArrayList<>(List.of("Hello World"));
 	}
-
 }
