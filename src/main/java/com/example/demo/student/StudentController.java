@@ -14,10 +14,16 @@ public class StudentController {
 
     @Autowired // Spring automatically injects the StudentService bean into this class
     // Since we marked StudentService with @Service (a specialized @Component),
-    // it becomes a Spring-managed bean and gets instantiated by Spring..
+    // it becomes a Spring-managed bean and gets instantiated by Spring.
     public StudentController(StudentService studentService) {
         this.studentService = studentService;
     }
+
+    // notes:
+    // 1. Spring scans for @Component (or @Service, @Repository, etc.) annotations.
+    // 2. Spring creates objects (beans) for these classes automatically.
+    // 3. When another class needs one of these beans, it injects the pre-initialized object using @Autowired.
+    // 4. This avoids manual instantiation (new ClassName()) and allows Spring to manage dependencies efficiently.
 
     @GetMapping // Handles HTTP GET requests to /api/v1/student
     public List<Student> getStudents() {
