@@ -3,6 +3,7 @@ package com.example.demo.student;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.time.Period;
 
 @Entity
 @Table // mapped our student class to table in our database
@@ -19,24 +20,27 @@ public class Student {
     )
     private long id;
     private String name;
+
+    @Transient // marking it prevents a field from being serialized when an object is converted into a byte stream.
+    // Some fields, like passwords, sensitive data, or large cache fields, should not be stored or transmitted.
+    // Using transient ensures these fields are ignored during serialization.
     private Integer age;
+
     private LocalDate dob;
     private String email;
 
     public Student() {}
 
-    public Student(String email, LocalDate dob, Integer age, long id, String name) {
+    public Student(String email, LocalDate dob, long id, String name) {
         this.email = email;
         this.dob = dob;
-        this.age = age;
         this.id = id;
         this.name = name;
     }
 
-    public Student(String email, LocalDate dob, Integer age, String name) {
+    public Student(String email, LocalDate dob, String name) {
         this.email = email;
         this.dob = dob;
-        this.age = age;
         this.name = name;
     }
 
@@ -57,7 +61,7 @@ public class Student {
     }
 
     public Integer getAge() {
-        return age;
+        return Period.between(this.dob, LocalDate.now()).getYears();
     }
 
     public void setAge(Integer age) {
