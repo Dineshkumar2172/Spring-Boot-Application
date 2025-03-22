@@ -1,23 +1,26 @@
 package com.example.demo.student;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDate;
 import java.util.List;
 
-@RestController // note: rest controller annotation makes this class to serve rest endpoints
-@RequestMapping(path = "api/v1/student")
+@RestController // // Marks this class as a REST API controller that serves endpoints
+@RequestMapping(path = "api/v1/student") // Maps requests to /api/v1/student to this controller
 public class StudentController {
-    @GetMapping
-    public List<Student> hello() {
-        return List.of(new Student(
-                "dinesh@gmail.com",
-                LocalDate.of(2000, 7, 21),
-                25,
-                876890,
-                "dinesh"
-        ));
+    private final StudentService studentService;
+
+    @Autowired // Spring automatically injects the StudentService bean into this class
+    // Since we marked StudentService with @Service (a specialized @Component),
+    // it becomes a Spring-managed bean and gets instantiated by Spring..
+    public StudentController(StudentService studentService) {
+        this.studentService = studentService;
+    }
+
+    @GetMapping // Handles HTTP GET requests to /api/v1/student
+    public List<Student> getStudents() {
+        return studentService.getStudents();
     }
 }
