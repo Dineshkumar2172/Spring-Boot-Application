@@ -1,10 +1,12 @@
 package com.example.demo.student;
 
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Component
@@ -36,5 +38,25 @@ public class StudentService {
             throw new IllegalStateException("student id " + studentId + " does not exist");
         }
         studentRepository.deleteById(studentId);
+    }
+
+    @Transactional
+    public void updateStudent(long studentId, String name, String email) {
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new IllegalStateException("student id " + studentId + " does not exist"));
+
+        if (name != null && !name.isEmpty()
+                && !Objects.equals(student.getName(), name)) { // using Objects.equals since it's non-primitive datatype
+            student.setName(name);
+        }
+
+        if (email != null && !email.isEmpty()
+                && !Objects.equals(student.getEmail(), email)) { // using Objects.equals since it's non-primitive datatype
+            Optional<Student> studentOptional = studentRepository.findStudentByEmail(email);
+            if (studentOptional.isPresent()) {
+                throw new IllegalStateException("email taken");
+            }
+            student.setEmail(email);
+        }
     }
 }
