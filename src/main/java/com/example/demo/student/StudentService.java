@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class StudentService {
@@ -17,5 +18,15 @@ public class StudentService {
 
     public List<Student> getStudents() {
         return studentRepository.findAll();
+    }
+
+    public void addNewStudent(Student student) {
+        Optional<Student> StudentOptional = studentRepository.findStudentByEmail(student.getEmail());
+        System.out.println("updating student");
+        if(StudentOptional.isPresent()) {
+            throw new IllegalStateException("email taken");
+        };
+        System.out.println("updating student");
+        studentRepository.save(student);
     }
 }
